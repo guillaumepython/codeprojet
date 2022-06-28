@@ -1,0 +1,59 @@
+import requests
+from bs4 import BeautifulSoup
+
+
+
+with open("urls", "r") as file:
+    for row in file:
+    url = "http://books.toscrape.com/catalogue/category/books/travel_2/index.html"
+    response = requests.get(url)
+    if response.ok:
+        soup = BeautifulSoup(response.text)
+        title = soup.find_all("h1")[0].get_text()
+        product_description = soup.find_all("p")[3].get_text()
+        print(title, product_description)
+
+
+
+
+
+
+"""""
+def get_category_urls(category_url):
+    category_urls = []
+    # boucle avec le nombre page des urls de la category
+    number_pages = number_of_page_category(category_url)
+    if number_pages == 1:
+        category_urls.append(category_url)
+    else:
+        for i in range(number_pages):
+            new_url = category_url.replace("index.", f"page-{i+1}.")
+            category_urls.append(new_url)
+"""""
+
+"""""
+# URL d'un livre
+url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
+page = requests.get(url)
+soup = BeautifulSoup(page.content, 'html.parser')
+lists = soup.findAll()
+# descriptif d'un livre
+universal_product_code = soup.find_all("tr")[0].get_text()
+title = soup.find_all("h1")[0].get_text()
+price_including_tax = soup.find_all("tr")[3].get_text()
+price_excluding_tax = soup.find_all("tr")[2].get_text()
+number_available = soup.find_all("tr")[5].get_text()
+product_description = soup.find_all("p")[3].get_text()
+category = soup.find_all("a")[3].get_text()
+review_rating = soup.find_all("tr")[6].get_text()
+image_url = soup.find_all("img")[0]
+informations = [universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url]
+# boucle pour afficher les informations
+for i in informations:
+        print(i)
+# fichier CSV
+en_tete = [informations]
+with open("data.csv", "w") as csv_file:
+        writer = csv.writer(csv_file, delimiter=",")
+        writer.writerow([informations])
+"""""
